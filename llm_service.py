@@ -67,6 +67,9 @@ The user asked:
 Answer the user's question naturally and directly, like a helpful expert.
 
 Important instructions:
+- Do NOT use markdown formatting such as asterisks for bold text or pound signs for headings. This response will be displayed as plain text, not rendered markdown.
+- When the answer naturally involves multiple items, categories, or steps, structure it as a list using a plain dash ("-") at the start of each point, with one blank line between points. Each point can be a full sentence or a short group of related sentences — do not break a single idea across multiple bullets, and do not create a new bullet for every line.
+- Only use a list when there are genuinely multiple distinct items to enumerate (like required documents or steps). For a simple direct answer with no natural list structure, just write normal short paragraphs instead.
 - Do NOT force the answer into sections such as What, Why, How, Where, Cost, or Next Action.
 - Do NOT return JSON.
 - Do NOT use markdown code fences.
