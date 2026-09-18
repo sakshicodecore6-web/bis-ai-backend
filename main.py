@@ -1,7 +1,7 @@
 # main.py
 from dotenv import load_dotenv
 load_dotenv()
-from routers import auth_routes, planner_routes, lab_routes, impact_routes, newsletter_routes, audit_routes, copilot_routes, product_routes
+from routers import auth_routes, planner_routes, lab_routes, impact_routes, newsletter_routes, audit_routes, copilot_routes, product_routes, profile_routes
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +18,7 @@ app.include_router(newsletter_routes.router)
 app.include_router(audit_routes.router)
 app.include_router(copilot_routes.router)
 app.include_router(product_routes.router)
+app.include_router(profile_routes.router)
 
 origins = [
     "http://localhost:5173",

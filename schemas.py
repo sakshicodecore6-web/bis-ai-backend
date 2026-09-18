@@ -152,3 +152,17 @@ class ChangeEventOut(BaseModel):
 
 class ChangeEventListResponse(BaseModel):
     events: list[ChangeEventOut]
+
+class ProfileUpdate(BaseModel):
+    company_name: Optional[str] = None
+    manufacturer_type: Optional[str] = None
+    factory_location: Optional[str] = None
+    business_type: Optional[str] = None
+
+
+class ProfileResponse(BaseModel):
+    id: int
+    company_name: Optional[str] = None
+    manufacturer_type: Optional[str] = None
+    factory_location: Optional[str] = None
+    business_type: Optional[str] = None
