@@ -43,6 +43,28 @@ class UserProduct(SQLModel, table=True):
     standard_code: str = Field(index=True)   # e.g. "IS 302", "IS 16046"
 
 
+
+class ProductBISContext(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    user_product_id: int = Field(
+        foreign_key="userproduct.id",
+        unique=True,
+        index=True,
+    )
+
+    is_number: Optional[str] = None
+    is_title: Optional[str] = None
+    is_year: Optional[int] = None
+    superseding_standard: Optional[str] = None
+
+    bis_scheme: Optional[str] = None
+    regulatory_status: Optional[str] = None
+
+    source_url: Optional[str] = None
+    last_verified: Optional[datetime] = None
+
+
 class StandardChangeEvent(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     standard_code: str = Field(index=True)

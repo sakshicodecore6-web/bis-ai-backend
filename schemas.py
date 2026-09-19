@@ -166,3 +166,25 @@ class ProfileResponse(BaseModel):
     manufacturer_type: Optional[str] = None
     factory_location: Optional[str] = None
     business_type: Optional[str] = None
+
+class ProductBISContextUpdate(BaseModel):
+    is_number: Optional[str] = None
+    is_title: Optional[str] = None
+    is_year: Optional[int] = None
+    superseding_standard: Optional[str] = None
+    bis_scheme: Optional[str] = None
+    regulatory_status: Optional[str] = None
+    source_url: Optional[str] = None
+
+
+class ProductBISContextResponse(BaseModel):
+    id: int
+    user_product_id: int
+    is_number: Optional[str] = None
+    is_title: Optional[str] = None
+    is_year: Optional[int] = None
+    superseding_standard: Optional[str] = None
+    bis_scheme: Optional[str] = None
+    regulatory_status: Optional[str] = None
+    source_url: Optional[str] = None
+    last_verified: Optional[datetime] = None
