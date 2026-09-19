@@ -167,6 +167,75 @@ def debug_bis_response(standard_code: str) -> dict:
         "row_count": html.lower().count("<tr"),
         "first_1000_chars": html[:1000],
     }
+def discover_standards(query: str) -> list[dict]:
+    """
+    BISync Intelligent Assistant: Accurately identifies the IS number from a product keyword, 
+    asks clarifying questions if the input is too broad, and fetches official LIMS data.
+    """
+    is_numbers_to_search = []
+    query_lower = query.strip().lower()
+    
+    # 1. Check if the user already typed a specific IS number directly
+    match = re.search(r"\b(\d{3,6})\b", query)
+    if match:
+        is_numbers_to_search.append(match.group(1))
+    else:
+        # 2. BISync Smart Resolution & Clarification Layer
+        if "water" in query_lower:
+            raise ValueError(
+                "Do you manufacture 'Packaged Drinking Water' (IS 14543) or "
+                "'Natural Mineral Water' (IS 13428)? Please specify the type."
+            )
+        elif "cement" in query_lower:
+            raise ValueError(
+                "Are you manufacturing Ordinary Portland Cement (IS 269) or Portland "
+                "Pozzolana Cement (IS 1489)? Please clarify."
+            )
+        elif "battery" in query_lower or "cell" in query_lower:
+            raise ValueError(
+                "Is your product a Nickel-based system (IS 16046 Part 1) or a Lithium-based "
+                "system (IS 16046 Part 2)? Please specify 'Nickel battery', 'Lithium battery', or enter the IS."
+            )
+        elif "nickel" in query_lower or "lithium" in query_lower:
+             is_numbers_to_search.append("16046")
+        elif "led" in query_lower or "bulb" in query_lower or "lamp" in query_lower:
+            is_numbers_to_search.append("16102")
+        elif "appliance" in query_lower or "iron" in query_lower or "heater" in query_lower:
+            is_numbers_to_search.append("302")
+        elif "toy" in query_lower:
+            is_numbers_to_search.append("9873")
+        elif "pipe" in query_lower or "pvc" in query_lower:
+            is_numbers_to_search.append("4985")
+        elif "steel" in query_lower or "rebar" in query_lower:
+            is_numbers_to_search.append("1786")
+        else:
+            raise ValueError(
+                f"I need a bit more detail to accurately identify the standard for '{query}'. "
+                "Could you provide the specific product type or material?"
+            )
+
+    candidates = {}
+    
+    # 3. Fetch real LIMS data using the identified standards
+    for is_num in is_numbers_to_search:
+        try:
+            results = search_bis_lims(is_num)
+            for r in results:
+                key = f"{r['indian_standard']}||{r['product']}"
+                if key not in candidates:
+                    candidates[key] = {
+                        "indian_standard": r['indian_standard'],
+                        "product": r['product'],
+                        "category": r.get('grade_type_size', 'General'),
+                        "source_url": r['source_url']
+                    }
+        except Exception:
+            continue  # Skip gracefully if a mapped standard fails to load from BIS
+
+    if not candidates:
+        raise ValueError(f"No active official BIS records found for '{query}'. Please check your spelling or provide more detail.")
+        
+    return list(candidates.values())
 
 def get_bis_standard_context(standard_code: str) -> dict:
     results = search_bis_lims(standard_code)
